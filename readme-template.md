@@ -29,7 +29,7 @@ headers](https://gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.h
 
 To get function combinators:
 
-    ;; Package-Requires: ((dash "[[ version ]]") (dash-functional "1.2.0"))
+    ;; Package-Requires: ((dash "[[ version ]]") (dash-functional "1.3.0"))
 
 ## Upcoming breaking change!
 

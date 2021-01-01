@@ -4,7 +4,7 @@
 
 ;; Authors: Matus Goljer <matus.goljer@gmail.com>
 ;;          Magnar Sveen <magnars@gmail.com>
-;; Version: 1.2.0
+;; Version: 1.3.0
 ;; Package-Requires: ((emacs "24") (dash "2.0.0"))
 ;; Keywords: extensions, lisp
 ;; Homepage: https://github.com/magnars/dash.el
@@ -26,7 +26,9 @@
 
 ;; Collection of useful combinators for Emacs Lisp.
 ;;
-;; See their overview at https://github.com/magnars/dash.el#functions.
+;; N.B.: This package is deprecated.
+;;       It has been absorbed by Dash 2.18.0.
+;;       Use that instead.
 
 ;;; Code:
 
