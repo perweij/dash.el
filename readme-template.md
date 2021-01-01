@@ -16,20 +16,12 @@ It's available on [GNU ELPA](https://elpa.gnu.org/) and
 
 Or you can just dump `dash.el` in your `load-path` somewhere.
 
-If you want the function combinators, then also:
-
-    M-x package-install dash-functional
-
 ## Using in a package
 
 Add something like this to the [library's
 headers](https://gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html):
 
     ;; Package-Requires: ((dash "[[ version ]]"))
-
-To get function combinators:
-
-    ;; Package-Requires: ((dash "[[ version ]]") (dash-functional "1.2.0"))
 
 ## Upcoming breaking change!
 

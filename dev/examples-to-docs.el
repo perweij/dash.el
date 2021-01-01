@@ -22,7 +22,6 @@
 ;;; Code:
 
 (require 'dash)
-(require 'dash-functional)
 (require 'lisp-mnt)
 
 (setq text-quoting-style 'grave)

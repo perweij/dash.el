@@ -1382,8 +1382,7 @@ consuming a list to produce a single value."
     (let ((l '(3))) (!cdr l) l) => '()
     (let ((l '(3 5))) (!cdr l) l) => '(5)))
 
-(def-example-group "Function combinators"
-  "These combinators require Emacs 24 for its lexical scope. So they are offered in a separate package: `dash-functional`."
+(def-example-group "Function combinators" nil
 
   (defexamples -partial
     (funcall (-partial '- 5) 3) => 2

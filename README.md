@@ -16,20 +16,12 @@ It's available on [GNU ELPA](https://elpa.gnu.org/) and
 
 Or you can just dump `dash.el` in your `load-path` somewhere.
 
-If you want the function combinators, then also:
-
-    M-x package-install dash-functional
-
 ## Using in a package
 
 Add something like this to the [library's
 headers](https://gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html):
 
     ;; Package-Requires: ((dash "2.17.0"))
-
-To get function combinators:
-
-    ;; Package-Requires: ((dash "2.17.0") (dash-functional "1.2.0"))
 
 ## Upcoming breaking change!
 
@@ -334,9 +326,6 @@ Functions iterating over lists for side-effect only.
 * [!cdr](#cdr-list) `(list)`
 
 ### Function combinators
-
-
-These combinators require Emacs 24 for its lexical scope. So they are offered in a separate package: `dash-functional`.
 
 * [-partial](#-partial-fn-rest-args) `(fn &rest args)`
 * [-rpartial](#-rpartial-fn-rest-args) `(fn &rest args)`
@@ -2693,9 +2682,6 @@ Destructive: Set `list` to the cdr of `list`.
 
 
 ## Function combinators
-
-
-These combinators require Emacs 24 for its lexical scope. So they are offered in a separate package: `dash-functional`.
 
 #### -partial `(fn &rest args)`
 
