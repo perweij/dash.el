@@ -22,7 +22,6 @@
 ;;; Code:
 
 (require 'dash)
-(require 'dash-functional)
 (require 'help-fns)
 (require 'lisp-mnt)
 
