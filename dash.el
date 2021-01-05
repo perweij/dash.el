@@ -49,19 +49,6 @@
   "Destructive: Set LIST to the cdr of LIST."
   `(setq ,list (cdr ,list)))
 
-(defmacro --each (list &rest body)
-  "Anaphoric form of `-each'."
-  (declare (debug (form body))
-           (indent 1))
-  (let ((l (make-symbol "list")))
-    `(let ((,l ,list)
-           (it-index 0))
-       (while ,l
-         (let ((it (car ,l)))
-           ,@body)
-         (setq it-index (1+ it-index))
-         (!cdr ,l)))))
-
 (defmacro -doto (init &rest forms)
   "Evaluate INIT and thread the result as the 2nd argument to other FORMS.
 INIT is evaluated once.  Its result is passed to FORMS, which are
@@ -76,13 +63,27 @@ then evaluated sequentially.  Returns the target form."
                  forms)
        ,retval)))
 
-(defmacro --doto (eval-initial-value &rest forms)
+(defmacro --doto (init &rest forms)
   "Anaphoric form of `-doto'.
 Note: `it' need not be used in each form."
   (declare (indent 1))
-  `(let ((it ,eval-initial-value))
+  `(let ((it ,init))
      ,@forms
      it))
+
+(defmacro --each (list &rest body)
+  "Anaphoric form of `-each'."
+  (declare (debug (form body))
+           (indent 1))
+  (let ((l (make-symbol "list"))
+        (i (make-symbol "i")))
+    `(let ((,l ,list)
+           (,i 0)
+           it it-index)
+       (ignore it it-index)
+       (while ,l
+         (setq it (pop ,l) it-index ,i ,i (1+ ,i))
+         ,@body))))
 
 (defun -each (list fn)
   "Call FN with every item in LIST. Return nil, used for side-effects only."
@@ -104,16 +105,16 @@ See also: `-map-indexed'."
   "Anaphoric form of `-each-while'."
   (declare (debug (form form body))
            (indent 2))
-  (let ((l (make-symbol "list")))
+  (let ((l (make-symbol "list"))
+        (i (make-symbol "i"))
+        (elt (make-symbol "elt")))
     `(let ((,l ,list)
-           (it-index 0)
-           it)
-       (ignore it)
-       (while (when ,l
-                (setq it (pop ,l))
-                ,pred)
-         ,@body
-         (setq it-index (1+ it-index))))))
+           (,i 0)
+           ,elt it it-index)
+       (ignore it it-index)
+       (while (and ,l (setq ,elt (pop ,l) it ,elt it-index ,i) ,pred)
+         (setq it ,elt it-index ,i ,i (1+ ,i))
+         ,@body))))
 
 (defun -each-while (list pred fn)
   "Call FN with every item in LIST while (PRED item) is non-nil.
@@ -125,18 +126,19 @@ Return nil, used for side-effects only."
   "Anaphoric form of `-each-r'."
   (declare (debug (form body))
            (indent 1))
-  (let ((v (make-symbol "vector")))
+  (let ((v (make-symbol "vector"))
+        (i (make-symbol "i")))
     ;; Implementation note: building vector is considerably faster
     ;; than building a reversed list (vector takes less memory, so
     ;; there is less GC), plus length comes naturally.  In-place
     ;; 'nreverse' would be faster still, but BODY would be able to see
     ;; that, even if modification was reversed before we return.
     `(let* ((,v (vconcat ,list))
-            (it-index (length ,v))
-            it)
-       (while (> it-index 0)
-         (setq it-index (1- it-index))
-         (setq it (aref ,v it-index))
+            (,i (length ,v))
+            it it-index)
+       (ignore it it-index)
+       (while (> ,i 0)
+         (setq ,i (1- ,i) it-index ,i it (aref ,v ,i))
          ,@body))))
 
 (defun -each-r (list fn)
@@ -148,16 +150,19 @@ Return nil, used for side-effects only."
   "Anaphoric form of `-each-r-while'."
   (declare (debug (form form body))
            (indent 2))
-  (let ((v (make-symbol "vector")))
+  (let ((v (make-symbol "vector"))
+        (i (make-symbol "i"))
+        (elt (make-symbol "elt")))
     `(let* ((,v (vconcat ,list))
-            (it-index (length ,v))
-            it)
-       (while (> it-index 0)
-         (setq it-index (1- it-index))
-         (setq it (aref ,v it-index))
-         (if (not ,pred)
-             (setq it-index -1)
-           ,@body)))))
+            (,i (length ,v))
+            ,elt it it-index)
+       (ignore it it-index)
+       (while (when (> ,i 0)
+                (setq ,i (1- ,i) it-index ,i)
+                (setq ,elt (aref ,v ,i) it ,elt)
+                ,pred)
+         (setq it-index ,i it ,elt)
+         ,@body))))
 
 (defun -each-r-while (list pred fn)
   "Call FN with every item in reversed LIST while (PRED item) is non-nil.
@@ -197,7 +202,14 @@ if NUM is less than 1."
 (defmacro --map (form list)
   "Anaphoric form of `-map'."
   (declare (debug (form form)))
-  `(mapcar (lambda (it) ,form) ,list))
+  (let ((l (make-symbol "list"))
+        (r (make-symbol "res")))
+    `(let ((,l ,list) ,r it)
+       (ignore it)
+       (while ,l
+         (setq it (pop ,l))
+         (push ,form ,r))
+       (nreverse ,r))))
 
 (defmacro --reduce-from (form initial-value list)
   "Anaphoric form of `-reduce-from'."
