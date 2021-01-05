@@ -1323,7 +1323,12 @@ Functions partitioning the input list into a list of lists.
 
 #### -split-at `(n list)`
 
-Return a list of ((-take `n` `list`) (-drop `n` `list`)), in no more than one pass through the list.
+Split `list` into two sublists after the Nth element.
+The result is a list of two elements (`take` `drop`) where `take` is a
+new list of the first `n` elements of `list`, and `drop` is the
+remaining elements of `list` (not a copy).  `take` and `drop` are
+similar to the results of [`-take`](#-take-n-list) and [`-drop`](#-drop-n-list), respectively, but
+the split is done in a single list traversal.
 
 ```el
 (-split-at 3 '(1 2 3 4 5)) ;; => '((1 2 3) (4 5))

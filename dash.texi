@@ -1880,7 +1880,12 @@ Functions partitioning the input list into a list of lists.
 
 @anchor{-split-at}
 @defun -split-at (n list)
-Return a list of ((-take @var{n} @var{list}) (-drop @var{n} @var{list})), in no more than one pass through the list.
+Split @var{list} into two sublists after the Nth element.
+The result is a list of two elements (@var{take} @var{drop}) where @var{take} is a
+new list of the first @var{n} elements of @var{list}, and @var{drop} is the
+remaining elements of @var{list} (not a copy).  @var{take} and @var{drop} are
+similar to the results of @code{-take} (@pxref{-take}) and @code{-drop} (@pxref{-drop}), respectively, but
+the split is done in a single list traversal.
 
 @example
 @group

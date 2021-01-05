@@ -922,13 +922,16 @@ See also: `-drop'"
   (nbutlast (copy-sequence list) n))
 
 (defun -split-at (n list)
-  "Return a list of ((-take N LIST) (-drop N LIST)), in no more than one pass through the list."
+  "Split LIST into two sublists after the Nth element.
+The result is a list of two elements (TAKE DROP) where TAKE is a
+new list of the first N elements of LIST, and DROP is the
+remaining elements of LIST (not a copy).  TAKE and DROP are
+similar to the results of `-take' and `-drop', respectively, but
+the split is done in a single list traversal."
   (declare (pure t) (side-effect-free t))
   (let (result)
-    (--dotimes n
-      (when list
-        (!cons (car list) result)
-        (!cdr list)))
+    (--each-while list (< it-index n)
+      (push (pop list) result))
     (list (nreverse result) list)))
 
 (defun -rotate (n list)
